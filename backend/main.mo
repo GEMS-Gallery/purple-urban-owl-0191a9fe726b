@@ -9,6 +9,7 @@ import Nat "mo:base/Nat";
 import Result "mo:base/Result";
 import Principal "mo:base/Principal";
 import Time "mo:base/Time";
+import Debug "mo:base/Debug";
 
 actor {
   type Property = {
@@ -68,7 +69,7 @@ actor {
     await initSampleProperty();
     let userId = msg.caller;
     switch (users.get(userId)) {
-      case (?_) { #err("User already exists") };
+      case (?_) { #ok() }; // User already exists, return ok
       case null {
         let newUser : User = {
           id = userId;
@@ -76,6 +77,7 @@ actor {
           propertyId = samplePropertyId;
         };
         users.put(userId, newUser);
+        Debug.print("User created: " # Principal.toText(userId));
         #ok()
       };
     }
@@ -84,7 +86,20 @@ actor {
   public shared(msg) func getAssignedProperty() : async Result.Result<Property, Text> {
     let userId = msg.caller;
     switch (users.get(userId)) {
-      case null { #err("User not found") };
+      case null { 
+        // If user doesn't exist, create one
+        let createResult = await createUser("DefaultUser");
+        switch(createResult) {
+          case (#ok()) {
+            // User created, now get the property
+            switch (properties.get(samplePropertyId)) {
+              case null { #err("Assigned property not found") };
+              case (?property) { #ok(property) };
+            }
+          };
+          case (#err(e)) { #err("Failed to create user: " # e) };
+        }
+      };
       case (?user) {
         switch (properties.get(user.propertyId)) {
           case null { #err("Assigned property not found") };

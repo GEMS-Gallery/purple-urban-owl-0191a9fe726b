@@ -19,19 +19,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setAuthClient(client);
       const isAuthenticated = await client.isAuthenticated();
       setIsAuthenticated(isAuthenticated);
+      if (isAuthenticated) {
+        await ensureUserCreated();
+      }
     });
   }, []);
+
+  const ensureUserCreated = async () => {
+    try {
+      await backend.createUser("DefaultUser");
+    } catch (error) {
+      console.error('Error creating user:', error);
+    }
+  };
 
   const login = () => {
     authClient?.login({
       identityProvider: process.env.II_URL,
       onSuccess: async () => {
         setIsAuthenticated(true);
-        try {
-          await backend.createUser("DefaultUser");
-        } catch (error) {
-          console.error('Error creating user:', error);
-        }
+        await ensureUserCreated();
       },
     });
   };

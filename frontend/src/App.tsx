@@ -21,6 +21,7 @@ const drawerWidth = 240;
 const App: React.FC = () => {
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeView, setActiveView] = useState('property');
   const { isAuthenticated, login, logout } = useAuth();
 
@@ -32,15 +33,18 @@ const App: React.FC = () => {
 
   const fetchAssignedProperty = async () => {
     setLoading(true);
+    setError(null);
     try {
       const result = await backend.getAssignedProperty();
       if ('ok' in result) {
         setProperty(result.ok);
       } else {
         console.error('Error fetching assigned property:', result.err);
+        setError('Failed to fetch property details. Please try again.');
       }
     } catch (error) {
       console.error('Error fetching assigned property:', error);
+      setError('An unexpected error occurred. Please try again.');
     }
     setLoading(false);
   };
@@ -90,6 +94,8 @@ const App: React.FC = () => {
         <Container>
           {loading ? (
             <CircularProgress />
+          ) : error ? (
+            <Typography color="error">{error}</Typography>
           ) : (
             <>
               {activeView === 'property' && <PropertyDetails property={property} />}
