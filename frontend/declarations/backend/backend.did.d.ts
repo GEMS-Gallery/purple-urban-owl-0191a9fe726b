@@ -2,6 +2,13 @@ import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 import type { IDL } from '@dfinity/candid';
 
+export interface Payment {
+  'id' : bigint,
+  'userId' : Principal,
+  'propertyId' : bigint,
+  'timestamp' : bigint,
+  'amount' : bigint,
+}
 export interface Property {
   'id' : bigint,
   'rentAmount' : bigint,
@@ -16,9 +23,13 @@ export type Result_2 = { 'ok' : bigint } |
   { 'err' : string };
 export interface _SERVICE {
   'addProperty' : ActorMethod<[string, bigint, [] | [string]], Result_2>,
+  'assignProperty' : ActorMethod<[bigint], Result>,
+  'createUser' : ActorMethod<[string], Result>,
   'deleteProperty' : ActorMethod<[bigint], Result>,
   'getAllProperties' : ActorMethod<[], Array<Property>>,
+  'getPaymentHistory' : ActorMethod<[Principal], Array<Payment>>,
   'getProperty' : ActorMethod<[bigint], Result_1>,
+  'payRent' : ActorMethod<[bigint], Result>,
   'updateProperty' : ActorMethod<
     [bigint, string, bigint, [] | [string]],
     Result
