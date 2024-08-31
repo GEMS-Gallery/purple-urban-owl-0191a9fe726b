@@ -1,0 +1,29 @@
+type Result_2 = 
+ variant {
+   err: text;
+   ok: nat;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: Property;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok;
+ };
+type Property = 
+ record {
+   address: text;
+   description: opt text;
+   id: nat;
+   rentAmount: nat;
+ };
+service : {
+  addProperty: (text, nat, opt text) -> (Result_2);
+  deleteProperty: (nat) -> (Result);
+  getAllProperties: () -> (vec Property) query;
+  getProperty: (nat) -> (Result_1) query;
+  updateProperty: (nat, text, nat, opt text) -> (Result);
+}
