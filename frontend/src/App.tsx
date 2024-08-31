@@ -19,25 +19,28 @@ type Property = {
 const drawerWidth = 240;
 
 const App: React.FC = () => {
-  const [properties, setProperties] = useState<Property[]>([]);
+  const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [activeView, setActiveView] = useState('property');
   const { isAuthenticated, login, logout } = useAuth();
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchProperties();
+      fetchAssignedProperty();
     }
   }, [isAuthenticated]);
 
-  const fetchProperties = async () => {
+  const fetchAssignedProperty = async () => {
     setLoading(true);
     try {
-      const result = await backend.getAllProperties();
-      setProperties(result);
+      const result = await backend.getAssignedProperty();
+      if ('ok' in result) {
+        setProperty(result.ok);
+      } else {
+        console.error('Error fetching assigned property:', result.err);
+      }
     } catch (error) {
-      console.error('Error fetching properties:', error);
+      console.error('Error fetching assigned property:', error);
     }
     setLoading(false);
   };
@@ -89,8 +92,8 @@ const App: React.FC = () => {
             <CircularProgress />
           ) : (
             <>
-              {activeView === 'property' && <PropertyDetails property={selectedProperty} />}
-              {activeView === 'payRent' && <PayRent property={selectedProperty} />}
+              {activeView === 'property' && <PropertyDetails property={property} />}
+              {activeView === 'payRent' && <PayRent property={property} />}
               {activeView === 'history' && <PaymentHistory />}
             </>
           )}

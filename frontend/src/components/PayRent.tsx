@@ -20,7 +20,7 @@ const PayRent: React.FC<PayRentProps> = ({ property }) => {
 
   const handlePayment = async () => {
     if (!property) {
-      setMessage('No property assigned. Cannot process payment.');
+      setMessage('Property details not available. Cannot process payment.');
       return;
     }
 
@@ -42,7 +42,7 @@ const PayRent: React.FC<PayRentProps> = ({ property }) => {
 
   if (!property) {
     return (
-      <Typography variant="body1">No property assigned. Please contact your landlord.</Typography>
+      <Typography variant="body1">Loading property details...</Typography>
     );
   }
 

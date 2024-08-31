@@ -15,7 +15,7 @@ interface PropertyDetailsProps {
 const PropertyDetails: React.FC<PropertyDetailsProps> = ({ property }) => {
   if (!property) {
     return (
-      <Typography variant="body1">No property assigned. Please contact your landlord.</Typography>
+      <Typography variant="body1">Loading property details...</Typography>
     );
   }
 

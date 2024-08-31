@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
+import { backend } from 'declarations/backend';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -24,7 +25,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = () => {
     authClient?.login({
       identityProvider: process.env.II_URL,
-      onSuccess: () => setIsAuthenticated(true),
+      onSuccess: async () => {
+        setIsAuthenticated(true);
+        try {
+          await backend.createUser("DefaultUser");
+        } catch (error) {
+          console.error('Error creating user:', error);
+        }
+      },
     });
   };
 

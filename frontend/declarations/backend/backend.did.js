@@ -7,6 +7,7 @@ export const idlFactory = ({ IDL }) => {
     'description' : IDL.Opt(IDL.Text),
     'address' : IDL.Text,
   });
+  const Result_1 = IDL.Variant({ 'ok' : Property, 'err' : IDL.Text });
   const Payment = IDL.Record({
     'id' : IDL.Nat,
     'userId' : IDL.Principal,
@@ -14,17 +15,16 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : IDL.Int,
     'amount' : IDL.Nat,
   });
-  const Result_1 = IDL.Variant({ 'ok' : Property, 'err' : IDL.Text });
   return IDL.Service({
     'addProperty' : IDL.Func(
         [IDL.Text, IDL.Nat, IDL.Opt(IDL.Text)],
         [Result_2],
         [],
       ),
-    'assignProperty' : IDL.Func([IDL.Nat], [Result], []),
     'createUser' : IDL.Func([IDL.Text], [Result], []),
     'deleteProperty' : IDL.Func([IDL.Nat], [Result], []),
     'getAllProperties' : IDL.Func([], [IDL.Vec(Property)], ['query']),
+    'getAssignedProperty' : IDL.Func([], [Result_1], []),
     'getPaymentHistory' : IDL.Func(
         [IDL.Principal],
         [IDL.Vec(Payment)],

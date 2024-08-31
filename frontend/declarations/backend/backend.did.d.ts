@@ -23,10 +23,10 @@ export type Result_2 = { 'ok' : bigint } |
   { 'err' : string };
 export interface _SERVICE {
   'addProperty' : ActorMethod<[string, bigint, [] | [string]], Result_2>,
-  'assignProperty' : ActorMethod<[bigint], Result>,
   'createUser' : ActorMethod<[string], Result>,
   'deleteProperty' : ActorMethod<[bigint], Result>,
   'getAllProperties' : ActorMethod<[], Array<Property>>,
+  'getAssignedProperty' : ActorMethod<[], Result_1>,
   'getPaymentHistory' : ActorMethod<[Principal], Array<Payment>>,
   'getProperty' : ActorMethod<[bigint], Result_1>,
   'payRent' : ActorMethod<[bigint], Result>,
